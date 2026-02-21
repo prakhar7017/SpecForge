@@ -2,11 +2,23 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { testLLMConnection } from "@/lib/llm";
 
+type HealthStatus = "healthy" | "unhealthy" | "unknown";
+
+interface HealthCheck {
+  status: HealthStatus;
+  latency: number;
+  error?: string;
+}
+
 export async function GET() {
-  const checks = {
-    backend: { status: "healthy" as const, latency: 0 },
-    database: { status: "unknown" as const, latency: 0, error: undefined as string | undefined },
-    llm: { status: "unknown" as const, latency: 0, error: undefined as string | undefined },
+  const checks: {
+    backend: HealthCheck;
+    database: HealthCheck;
+    llm: HealthCheck;
+  } = {
+    backend: { status: "healthy", latency: 0 },
+    database: { status: "unknown", latency: 0 },
+    llm: { status: "unknown", latency: 0 },
   };
 
   // Backend check (always healthy if we reach here)
