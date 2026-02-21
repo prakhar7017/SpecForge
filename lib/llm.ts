@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { z } from "zod";
-import { generatedSpecSchema, type FeatureInput } from "./validators";
+import { generatedSpecSchema, type FeatureInput, type GeneratedSpec } from "./validators";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -61,7 +61,7 @@ Return ONLY valid JSON matching this exact structure:
 }`;
 }
 
-export async function generateSpec(input: FeatureInput): Promise<typeof generatedSpecSchema._type> {
+export async function generateSpec(input: FeatureInput): Promise<GeneratedSpec> {
   const prompt = buildPrompt(input);
 
   try {
